@@ -1,10 +1,13 @@
 package com.zyziek.calculator
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,18 +19,23 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 
 
 val calculatorButtons = listOf(
@@ -53,28 +61,39 @@ fun Calculator(modifier: Modifier = Modifier, viewModel: CalculatorViewModel) {
             //Text is on the right side
             horizontalAlignment = Alignment.End
         ){
-            Text(
-                text = equationText.value?:"",
-                style = TextStyle(
-                    color = Color.White,
-                    fontSize = 30.sp,
-                    textAlign = TextAlign.End
-                ),
-                maxLines = 5,
-                overflow = TextOverflow.Ellipsis
+            Column(
+                modifier = Modifier
+                    .weight(1f) // Blok "wyświetlacza" zajmuje część ekranu
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Bottom // Tekst na dole "wyświetlacza"
+            ) {
+                Text(
+                    text = equationText.value ?: "",
+                    style = TextStyle(
+                        color = Color.White,
+                        fontSize = 30.sp,
+                        textAlign = TextAlign.End
+                    ),
+                    maxLines = 5,
+                    overflow = TextOverflow.Ellipsis
                 )
+                if (equationText.value == "6*6") {
+                    SpecialEquationText()
+                } else {
+                    Text(
+                        text = resultText.value ?: "",
+                        style = TextStyle(
+                            color = Color.White,
+                            fontSize = 60.sp,
+                            textAlign = TextAlign.End
+                        ),
+                        maxLines = 2,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
 
-            Text(
-                text = resultText.value?:"",
-                style = TextStyle(
-                    color = Color.White,
-                    fontSize = 60.sp,
-                    textAlign = TextAlign.End
-                ),
-                maxLines = 2,
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
+            }
 
             LazyVerticalGrid (
                 columns = GridCells.Fixed(4),
@@ -91,6 +110,53 @@ fun Calculator(modifier: Modifier = Modifier, viewModel: CalculatorViewModel) {
         }
     }
 }
+
+@Composable
+fun SpecialEquationText() {
+    val context = LocalContext.current
+    val textToDisplay1 = "yyy szesc razy szesc"
+    val textToDisplay2 = "to jest najgorsze"
+    val displayedText = remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+
+        val mediaPlayer = MediaPlayer.create(context, R.raw.bedoes_sound_effect)
+        mediaPlayer.start()
+
+        displayedText.value = ""
+        for (i in textToDisplay1.indices) {
+            displayedText.value = textToDisplay1.substring(0, i + 1)
+            delay(100)
+        }
+
+        delay(500)
+        displayedText.value = ""
+
+        delay( 2500)
+        for (i in textToDisplay2.indices) {
+            displayedText.value = textToDisplay2.substring(0, i + 1)
+            delay(50)
+        }
+
+        delay(400)
+        mediaPlayer.setOnCompletionListener {
+            it.release()
+        }
+
+        displayedText.value = "36"
+    }
+
+    Text(
+        text = displayedText.value,
+        modifier = Modifier.fillMaxWidth(),
+        textAlign = TextAlign.End,
+        style = TextStyle(
+            color = Color.White,
+            fontSize = 60.sp
+        )
+    )
+}
+
 
 @Composable
 fun CalculatorButton(btn: String, onClick: () -> Unit) {
