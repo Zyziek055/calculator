@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,23 +35,28 @@ val calculatorButtons = listOf(
     "7", "8", "9", "×",
     "4", "5", "6", "-",
     "1", "2", "3", "+",
-    "K", "0", ",", "="
+    "AC", "0", ",", "="
 )
 
 /*
     Modifier - let's us decorate and add behaviour to elements (background, padding, font etc)
  */
 @Composable
-fun Calculator(modifier: Modifier = Modifier) {
+fun Calculator(modifier: Modifier = Modifier, viewModel: CalculatorViewModel) {
+    val equationText = viewModel.equationText.observeAsState()
+    val resultText = viewModel.resultText.observeAsState()
+
+
     Box(modifier = modifier) {
         Column (
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize().background(Color(0xFF1C1C1C)),
             //Text is on the right side
             horizontalAlignment = Alignment.End
         ){
             Text(
-                text = "123+123",
+                text = equationText.value?:"",
                 style = TextStyle(
+                    color = Color.White,
                     fontSize = 30.sp,
                     textAlign = TextAlign.End
                 ),
@@ -59,8 +65,9 @@ fun Calculator(modifier: Modifier = Modifier) {
                 )
 
             Text(
-                text = "234+123",
+                text = resultText.value?:"",
                 style = TextStyle(
+                    color = Color.White,
                     fontSize = 60.sp,
                     textAlign = TextAlign.End
                 ),
@@ -74,7 +81,9 @@ fun Calculator(modifier: Modifier = Modifier) {
             ) {
 
                 items(calculatorButtons) {
-                    CalculatorButton(it)
+                    CalculatorButton(btn = it, onClick = {
+                        viewModel.onButtonClick(it)
+                    })
                 }
 
             }
@@ -84,11 +93,11 @@ fun Calculator(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CalculatorButton(btn: String) {
+fun CalculatorButton(btn: String, onClick: () -> Unit) {
     Box(modifier = Modifier.padding(8.dp)) {
         FloatingActionButton(
             modifier = Modifier.size(80.dp),
-            onClick = {/*todo*/},
+            onClick = onClick,
             contentColor = Color.White,
             containerColor = getColor(btn),
             shape = CircleShape
