@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.TextStyle
@@ -66,7 +67,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 maxLines = 2,
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             LazyVerticalGrid (
                 columns = GridCells.Fixed(4),
@@ -85,13 +86,12 @@ fun Calculator(modifier: Modifier = Modifier) {
 @Composable
 fun CalculatorButton(btn: String) {
     Box(modifier = Modifier.padding(8.dp)) {
-        Button(
+        FloatingActionButton(
+            modifier = Modifier.size(80.dp),
             onClick = {/*todo*/},
-            modifier = Modifier.size(width = 130.dp, height = 60.dp),
-            colors = ButtonDefaults.buttonColors(
-                contentColor = Color.White,
-                containerColor = getColor(btn)
-            )
+            contentColor = Color.White,
+            containerColor = getColor(btn),
+            shape = CircleShape
         ) {
             Text(text = btn, fontSize = 25.sp, fontWeight = FontWeight.Bold)
         }
