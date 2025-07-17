@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 
 
 val calculatorButtons = listOf(
-    "C", "±", "%", "÷",
+    "C", "(", ")", "÷",
     "7", "8", "9", "×",
     "4", "5", "6", "-",
     "1", "2", "3", "+",
@@ -108,7 +108,7 @@ fun CalculatorButton(btn: String, onClick: () -> Unit) {
 }
 
 fun getColor(btn: String): Color {
-    if (btn in listOf("C", "±", "%")) {
+    if (btn in listOf("C", "(", ")")) {
         return Color(0xFFD4D4D2)
     }
 
