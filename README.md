@@ -1,7 +1,7 @@
 ## *Calculator*
 
 Simple calculator Kotlin app built with Jetpack Compose. 
-Mathematical expressions are calculated using the Rhino JavaScript engine. 
+Mathematical expressions are calculated using the Rhino JavaScript engine.  
 👉 [Rhino Engine](https://github.com/mozilla/rhino)
 
 Typing `6 x 6` triggers an easter egg — a quote from Polish rapper Bedoes answering the infamous question.  
